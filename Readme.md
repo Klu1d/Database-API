@@ -37,8 +37,8 @@ This is a local FastAPI-based application designed for managing data in PostgreS
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone <repo-url>
-   cd cloudmoonai_db/app
+   git clone https://github.com/Klu1d/Database-API.git
+   cd Database-API/app
    ```
 2. Create a virtual environment:
    ```sh
