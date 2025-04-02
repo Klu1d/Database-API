@@ -31,7 +31,6 @@ async def update_company(
 @router.patch('/update/employee/{id}', response_model=models.Employee)
 async def update_employee(
     id: int, 
-    company_id: int = Query(None),
     firstname: str = Query(None),
     lastname: str = Query(None),
     status: str = Query(None),
@@ -56,7 +55,6 @@ async def update_employee(
 @router.patch('/update/camera/{id}', response_model=models.Camera)
 async def update_camera(
     id: int,
-    company_id: int = Query(None),
     name: str = Query(None),
     rtsp: str = Query(None),
     location_name: str = Query(None),
@@ -78,7 +76,6 @@ async def update_event(
     id: int,
     device_id: str = Query(None),
     camera_id: int = Query(None),
-    company_id: int = Query(None),
     hash: str = Query(None),
     video: str = Query(None),
     image: str = Query(None),
