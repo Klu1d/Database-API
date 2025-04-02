@@ -96,8 +96,7 @@ async def create_event(
     details: dict = Body(),
     session: AsyncSession = Depends(database.sessions)
 ):
-    event = await schemas.Events(
-        session=session,
+    event = schemas.Events(
         device_id=device_id,
         camera_id=camera_id,
         company_id=company_id,
