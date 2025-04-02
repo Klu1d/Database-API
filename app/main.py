@@ -13,7 +13,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title='Database API',
-    lifespan=lifespan
+    docs_url='/database/api',
+    lifespan=lifespan,
 )
 
 app.include_router(create.router)
