@@ -71,8 +71,7 @@ async def create_camera(
     coordinate: list[int] = Query(None),
     session: AsyncSession = Depends(database.sessions)
 ):
-    camera = await schemas.Cameras(
-        session=session,
+    camera = schemas.Cameras(
         company_id=company_id,
         name=name,
         rtsp=rtsp,
