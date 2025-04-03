@@ -1,5 +1,6 @@
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from database import Base
 
@@ -13,30 +14,32 @@ SINGULAR_NAMES = {
 
 
 async def update(session: AsyncSession, schema: Base, id: int, params: dict):
-    record = await session.get(schema, id)
+    try:
+        record = await session.get(schema, id)
 
-    if not record:
-        raise HTTPException(400, f"{schema.__name__} with ID {id} not found")
+        for key, value in params.items():
+            if value is not None:
+                setattr(record, key, value)
 
-    for key, value in params.items():
-        if value is not None:
-            setattr(record, key, value)
-
-    session.add(record)
-    await session.commit()
+        session.add(record)
+        await session.commit()
+    except AttributeError:
+        raise HTTPException(400, f"{SINGULAR_NAMES[schema.__tablename__]} with id {id} not found")
+    except IntegrityError as e:
+        raise HTTPException(409, f"This name is already in use")
     return record
 
 
-async def read(session: AsyncSession, schema: Base, id: int):
-    result = await session.execute(
-        select(schema)
-        .where(schema.id == id)
-        if id else select(schema)
-    )
-    record = (
-        result.scalars().first()
-        if id else result.scalars().all()
-    )
+async def read(session: AsyncSession, schema: Base, id: int = None):
+    query = select(schema)
+    if id:
+        query = query.where(schema.id == id)
+
+    result = await session.execute(query)
+    record = result.scalars().first() if id else result.scalars().all()
+
+    if record is None or (isinstance(record, list) and not record):
+        raise HTTPException(404, f"{SINGULAR_NAMES[schema.__tablename__]} with id {id} not found")
     return record
 
 
