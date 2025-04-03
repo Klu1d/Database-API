@@ -9,33 +9,30 @@ import crud
 
 router = APIRouter()
 
-@router.get('/read/company', response_model=models.Company | list[models.Company])
+@router.get('/read/companies', response_model=models.Company | list[models.Company])
 async def read_company(
     session: AsyncSession = Depends(database.sessions), id: int = Query(None)
 ):
-    company = await crud.read(session=session, schema=schemas.Companies, id=id)
-    return company
+    companies = await crud.read(session=session, schema=schemas.Companies, id=id)
+    return companies
 
-@router.get('/read/employee', response_model=models.Employee | list[models.Employee])
+@router.get('/read/employees', response_model=models.Employee | list[models.Employee])
 async def read_employee(
     session: AsyncSession = Depends(database.sessions), id: int = Query(None)
 ):
-    async for session in database.sessions():
-        employees = await crud.read(session, schemas.Employees, id)
+    employees = await crud.read(session=session, schema=schemas.Employees, id=id)
     return employees
 
-@router.get('/read/camera', response_model=models.Camera | list[models.Camera])
+@router.get('/read/cameras', response_model=models.Camera | list[models.Camera])
 async def read_cameras(
     session: AsyncSession = Depends(database.sessions), id: int = Query(None)
 ):
-    async for session in database.sessions():
-        cameras = await crud.read(session, schemas.Cameras, id)
+    cameras = await crud.read(session=session, schema=schemas.Cameras, id=id)
     return cameras
 
-@router.get('/read/event', response_model=models.Event | list[models.Event])
+@router.get('/read/events', response_model=models.Event | list[models.Event])
 async def read_event(
     session: AsyncSession = Depends(database.sessions), id: int = Query(None)
 ):
-    async for session in database.sessions():
-        events = await crud.read(session, schemas.Events, id)
+    events = await crud.read(session=session, schema=schemas.Events, id=id)
     return events
