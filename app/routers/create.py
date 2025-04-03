@@ -45,6 +45,10 @@ async def create_company(
     last_update_time: datetime = Query(None),
     session: AsyncSession = Depends(database.sessions)
 ):
+    company = await session.get(schemas.Companies, company_id)
+    if not company:
+        raise HTTPException(status_code=400, detail=f"Company with id {company_id} does not exist")
+
     employee = schemas.Employees(
         firstname=firstname,
         lastname=lastname,
@@ -71,6 +75,10 @@ async def create_camera(
     coordinate: list[int] = Query(None),
     session: AsyncSession = Depends(database.sessions)
 ):
+    company = await session.get(schemas.Companies, company_id)
+    if not company:
+        raise HTTPException(status_code=400, detail=f"Company with id {company_id} does not exist")
+
     camera = schemas.Cameras(
         company_id=company_id,
         name=name,
@@ -96,6 +104,10 @@ async def create_event(
     details: dict = Body(),
     session: AsyncSession = Depends(database.sessions)
 ):
+    company = await session.get(schemas.Companies, company_id)
+    if not company:
+        raise HTTPException(status_code=400, detail=f"Company with id {company_id} does not exist")
+
     event = schemas.Events(
         device_id=device_id,
         camera_id=camera_id,
