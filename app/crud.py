@@ -11,21 +11,13 @@ SINGULAR_NAMES = {
     "cameras": "Camera"
 }
 
-async def create(session: AsyncSession, schema: Base, id: int):
-    session.add(schema)
-    session.commit()
-    session.refresh(schema)
-    return schema
-
 
 async def update(session: AsyncSession, schema: Base, id: int, params: dict):
-    result = await session.execute(select(schema).filter(schema.id == id))
-    record = result.scalars().first()
+    record = await session.get(schema, id)
 
     if not record:
-        raise ValueError(f"{schema.__name__} with ID {id} not found")
+        raise HTTPException(400, f"{schema.__name__} with ID {id} not found")
 
-    # Обновляем только переданные параметры
     for key, value in params.items():
         if value is not None:
             setattr(record, key, value)
