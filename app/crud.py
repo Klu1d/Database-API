@@ -38,8 +38,6 @@ async def read(session: AsyncSession, schema: Base, id: int = None):
     result = await session.execute(query)
     record = result.scalars().first() if id else result.scalars().all()
 
-    if record is None or (isinstance(record, list) and not record):
-        raise HTTPException(404, f"{SINGULAR_NAMES[schema.__tablename__]} with id {id} not found")
     return record
 
 
