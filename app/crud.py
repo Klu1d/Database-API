@@ -25,8 +25,8 @@ async def update(session: AsyncSession, schema: Base, id: int, params: dict):
         await session.commit()
     except AttributeError:
         raise HTTPException(400, f"{SINGULAR_NAMES[schema.__tablename__]} with id {id} not found")
-    except IntegrityError as e:
-        raise HTTPException(409, f"This name is already in use")
+    except IntegrityError:
+        raise HTTPException(409, "This name is already in use")
     return record
 
 

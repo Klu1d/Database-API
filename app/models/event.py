@@ -9,9 +9,9 @@ class Event(BaseModel):
     company_id: int | None = None
     date_start: datetime | None = None
     date_end: datetime | None = None
-    hash: str | None = None     
-    video: str | None = None    
-    image: str | None = None    
+    hash: str | None = None
+    video: str | None = None
+    image: str | None = None
     details: dict | None = None
 
     model_config = ConfigDict(from_attributes=True)

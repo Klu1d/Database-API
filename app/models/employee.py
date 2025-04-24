@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
+
 class Employee(BaseModel):
     id: int
     company_id: int | None = None
@@ -15,5 +16,3 @@ class Employee(BaseModel):
     last_update_time: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-
-

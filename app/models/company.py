@@ -1,7 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
 
-
 class Company(BaseModel):
     id: int
     name: str | None = None

@@ -1,38 +1,35 @@
 from datetime import datetime
-from fastapi import APIRouter, HTTPException, Query, Body, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
 
+import database
 import models
 import schemas
-import database
-
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
-@router.post('/create/company', response_model=models.Company)
+
+@router.post("/create/company", response_model=models.Company)
 async def create_company(
     name: str = Query(),
     password: str = Query(),
     email: str = Query(None),
-    session: AsyncSession = Depends(database.sessions)
+    session: AsyncSession = Depends(database.sessions),
 ):
     try:
-        company = schemas.Companies(
-            name=name, 
-            password=password, 
-            email=email
-        )
+        company = schemas.Companies(name=name, password=password, email=email)
         session.add(company)
         await session.commit()
         await session.refresh(company)
-    except IntegrityError as e:
+    except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=409)
     return company
 
-@router.post('/create/employee', response_model=models.Employee)
-async def create_company(
+
+@router.post("/create/employee", response_model=models.Employee)
+async def create_employee(
     company_id: int = Query(),
     firstname: str = Query(),
     lastname: str = Query(None),
@@ -43,11 +40,13 @@ async def create_company(
     idle_time: datetime = Query(None),
     using_the_phone_time: datetime = Query(None),
     last_update_time: datetime = Query(None),
-    session: AsyncSession = Depends(database.sessions)
+    session: AsyncSession = Depends(database.sessions),
 ):
     company = await session.get(schemas.Companies, company_id)
     if not company:
-        raise HTTPException(status_code=400, detail=f"Company with id {company_id} does not exist")
+        raise HTTPException(
+            status_code=400, detail=f"Company with id {company_id} does not exist"
+        )
 
     employee = schemas.Employees(
         firstname=firstname,
@@ -59,25 +58,28 @@ async def create_company(
         idle_time=idle_time,
         using_the_phone_time=using_the_phone_time,
         last_update_time=last_update_time,
-        company_id=company_id
+        company_id=company_id,
     )
     session.add(employee)
     await session.commit()
     await session.refresh(employee)
     return employee
 
-@router.post('/create/camera', response_model=models.Camera)
+
+@router.post("/create/camera", response_model=models.Camera)
 async def create_camera(
     company_id: int = Query(),
     name: str = Query(),
     rtsp: str = Query(),
     location_name: str = Query(None),
     coordinate: list[int] = Query(None),
-    session: AsyncSession = Depends(database.sessions)
+    session: AsyncSession = Depends(database.sessions),
 ):
     company = await session.get(schemas.Companies, company_id)
     if not company:
-        raise HTTPException(status_code=400, detail=f"Company with id {company_id} does not exist")
+        raise HTTPException(
+            status_code=400, detail=f"Company with id {company_id} does not exist"
+        )
 
     camera = schemas.Cameras(
         company_id=company_id,
@@ -91,7 +93,8 @@ async def create_camera(
     await session.refresh(camera)
     return camera
 
-@router.post('/create/event', response_model=models.Event)
+
+@router.post("/create/event", response_model=models.Event)
 async def create_event(
     device_id: str = Query(None),
     camera_id: int = Query(),
@@ -102,11 +105,13 @@ async def create_event(
     date_start: datetime = Query(),
     date_end: datetime = Query(),
     details: dict = Body(),
-    session: AsyncSession = Depends(database.sessions)
+    session: AsyncSession = Depends(database.sessions),
 ):
     company = await session.get(schemas.Companies, company_id)
     if not company:
-        raise HTTPException(status_code=400, detail=f"Company with id {company_id} does not exist")
+        raise HTTPException(
+            status_code=400, detail=f"Company with id {company_id} does not exist"
+        )
 
     event = schemas.Events(
         device_id=device_id,
