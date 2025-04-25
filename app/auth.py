@@ -1,15 +1,17 @@
-import os
 import hmac
-from fastapi import HTTPException, Request
+import os
+
 from dotenv import load_dotenv
+from fastapi import Depends, HTTPException
+from fastapi.security import APIKeyHeader
 
 load_dotenv()
-API_KEY = os.getenv("API_KEY")
 
-def secret(request: Request):
-    api_key = request.headers.get("X-API-Key")
-    
-    if not api_key or not hmac.compare_digest(api_key, API_KEY):
+API_KEY = os.getenv("API_KEY")
+input_key = APIKeyHeader(name="X-API-Key")
+
+def secret(key: str = Depends(input_key)):
+    if not hmac.compare_digest(key, API_KEY):
         raise HTTPException(status_code=403, detail="Access denied")
-    
-    return api_key
+
+    return key
