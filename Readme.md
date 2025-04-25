@@ -13,6 +13,7 @@ This is a local FastAPI-based application designed for managing data in PostgreS
 ## Project Structure
 ```
 .
+├── auth.py          # Authentication
 ├── crud.py          # Database interaction logic
 ├── database.py      # Database connection setup
 ├── main.py          # FastAPI entry point
@@ -53,6 +54,8 @@ This is a local FastAPI-based application designed for managing data in PostgreS
    - **DATABASE_URL** - The PostgreSQL connection URL (e.g., `postgresql+asyncpg://username:password@localhost/dbname`)
    Example `.env` file:
    ```
+      API_KEY=
+
       DB_HOST=127.0.0.1
       DB_PORT=5432 # default PostgreSQL port
       DB_USER=
