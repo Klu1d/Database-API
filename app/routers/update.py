@@ -4,6 +4,7 @@ import crud
 import database
 import models
 import schemas
+from auth import secret
 from fastapi import APIRouter, Body, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,6 +18,7 @@ async def update_company(
     password: str = Query(None),
     email: str = Query(None),
     session: AsyncSession = Depends(database.sessions),
+    api_key: str = Depends(secret)
 ):
     params = dict(locals())
     params.pop("id")
@@ -42,6 +44,7 @@ async def update_employee(
     using_the_phone_time: datetime = Query(None),
     last_update_time: datetime = Query(None),
     session: AsyncSession = Depends(database.sessions),
+    api_key: str = Depends(secret)
 ):
     params = dict(locals())
     params.pop("id")
@@ -59,6 +62,7 @@ async def update_camera(
     location_name: str = Query(None),
     coordinate: list[int] = Query(None),
     session: AsyncSession = Depends(database.sessions),
+    api_key: str = Depends(secret)
 ):
     params = dict(locals())
     params.pop("id")
@@ -80,6 +84,7 @@ async def update_event(
     date_end: datetime = Query(None),
     details: dict = Body(None),
     session: AsyncSession = Depends(database.sessions),
+    api_key: str = Depends(secret)
 ):
     params = dict(locals())
     params.pop("id")
