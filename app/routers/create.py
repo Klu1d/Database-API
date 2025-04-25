@@ -3,6 +3,7 @@ from datetime import datetime
 import database
 import models
 import schemas
+from auth import secret
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,6 +17,7 @@ async def create_company(
     password: str = Query(),
     email: str = Query(None),
     session: AsyncSession = Depends(database.sessions),
+    api_key: str = Depends(secret)
 ):
     try:
         company = schemas.Companies(name=name, password=password, email=email)
