@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter()
 
 
-@router.post("/create/company", response_model=models.Company)
+@router.post("/company", response_model=models.Company)
 async def create_company(
     name: str = Query(),
     password: str = Query(),
@@ -30,7 +30,7 @@ async def create_company(
     return company
 
 
-@router.post("/create/employee", response_model=models.Employee)
+@router.post("/employee", response_model=models.Employee)
 async def create_employee(
     company_id: int = Query(),
     firstname: str = Query(),
@@ -68,7 +68,7 @@ async def create_employee(
     return employee
 
 
-@router.post("/create/camera", response_model=models.Camera)
+@router.post("/camera", response_model=models.Camera)
 async def create_camera(
     company_id: int = Query(),
     name: str = Query(),
@@ -96,7 +96,7 @@ async def create_camera(
     return camera
 
 
-@router.post("/create/event", response_model=models.Event)
+@router.post("/event", response_model=models.Event)
 async def create_event(
     device_id: str = Query(None),
     camera_id: int = Query(),
