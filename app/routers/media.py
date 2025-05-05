@@ -13,17 +13,25 @@ ALLOWED_VIDEO_TYPES = set(os.getenv("ALLOWED_VIDEO_TYPES", "video/mp4,video/quic
 ALLOWED_TYPES = ALLOWED_IMAGE_TYPES.union(ALLOWED_VIDEO_TYPES)
 MEDIA_PATH = Path(os.getenv("MEDIA_PATH", "media")).resolve()
 
+upload_description = f"""
+Upload an image or video file to the server.
 
-@router.post("/upload")
+- Supported image types: **{ALLOWED_IMAGE_TYPES}**
+- Supported video types: **{ALLOWED_VIDEO_TYPES}**
+- File will be stored in either `media/image/` or `media/video/` folder.
+- ⚠️ It is **strongly recommended** to avoid using spaces in filenames. Any spaces will be replaced with underscores (`_`) automatically.
+"""
+
+download_description = """
+Download an uploaded image or video file by its filename.
+
+- Spaces in the filename are automatically replaced with underscores (`_`) when looking for the file.
+- Returns the file with the correct media type.
+"""
+
+
+@router.post("/upload", description=upload_description)
 async def upload(file: UploadFile = File(...), api_key: str = Depends(secret)) -> dict:
-    f"""
-    Upload an image or video file to the server.
-
-    - Supported image types: **{ALLOWED_IMAGE_TYPES}**
-    - Supported video types: **{ALLOWED_VIDEO_TYPES}**
-    - File will be stored in either `media/image/` or `media/video/` folder.
-    - ⚠️ It is **strongly recommended** to avoid using spaces in filenames. Any spaces will be replaced with underscores (`_`) automatically.
-    """
     if file.content_type not in ALLOWED_TYPES:
         raise HTTPException(
             status_code=400,
@@ -46,14 +54,8 @@ async def upload(file: UploadFile = File(...), api_key: str = Depends(secret)) -
     return {"filename": safe_filename, "type": file.content_type}
 
 
-@router.get("/download/{filename}", response_class=FileResponse)
+@router.get("/download/{filename}", response_class=FileResponse, description=download_description)
 async def download(filename: str, api_key: str = Depends(secret)) -> FileResponse:
-    """
-    Download an uploaded image or video file by its filename.
-
-    - Spaces in the filename are automatically replaced with underscores (`_`) when looking for the file.
-    - Returns the file with the correct media type.
-    """
     safe_filename = filename.replace(" ", "_")
     image_path = MEDIA_PATH / "image" / safe_filename
     video_path = MEDIA_PATH / "video" / safe_filename
