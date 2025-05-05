@@ -1,5 +1,5 @@
 # FastAPI/PostgreSQL/SQLAlchemy
-![image](https://github.com/user-attachments/assets/458b9303-7071-4c24-827e-366a789bab0e)
+![image](https://github.com/user-attachments/assets/55571b8d-b770-4a5b-aa83-84e705827fa0)
 
 ## 📦 Description
 This is a local FastAPI-based application designed for managing data in PostgreSQL using SQLAlchemy. It provides a structured and efficient way to perform CRUD operations on various entities, such as companies, employees, cameras, and events.
