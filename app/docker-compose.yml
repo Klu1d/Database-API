@@ -15,7 +15,7 @@ services:
     build: .
     container_name: Database-API
     ports:
-      - "8089:8089"
+      - "8091:8091"
     depends_on:
       - db
     environment:
@@ -25,7 +25,10 @@ services:
       DB_USER: admin
       DB_PASS: admin
       DB_NAME: master
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8089"]
+      MEDIA_PATH: /app/media
+    volumes:
+      - ./media:/app/media
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8091"]
 
 volumes:
   postgres_data:
