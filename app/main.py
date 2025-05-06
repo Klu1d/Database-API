@@ -21,5 +21,9 @@ app.include_router(update.router, tags=['Update'], prefix='/update')
 app.include_router(delete.router, tags=['Delete'], prefix='/delete')
 app.include_router(media.router, tags=['Media'], prefix='/media')
 
+@app.get("/ping", include_in_schema=False)
+async def ping():
+    return {"status": "Database-API is running"}
+
 if __name__ == "__main__":
     uvicorn.run(app)
